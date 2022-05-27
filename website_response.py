@@ -1,49 +1,7 @@
 #Import the required Libraries
-from tkinter import *
-from tkinter import ttk
+# from open_window import open_window
 import urllib.request
 
-
-# This section is for managing the tkinter window.
-def open_window():
-    #Create an instance of Tkinter frame
-    win = Tk()
-
-    #Set the geometry of Tkinter frame
-    win.geometry("300x250")
-    win.maxsize(width="300", height="250")
-    win.eval('tk::PlaceWindow . center')
-    big_frame = ttk.Frame(win)
-    big_frame.pack(fill="both", expand=False)
-
-    # This will initiate the theme of the tkinter window.
-    # The theme being used is azure downloaded from (https://github.com/rdbende/Azure-ttk-theme)
-    win.tk.call("source", "Azure-ttk-theme-main/azure.tcl")
-    win.tk.call("set_theme", "dark")
-
-    #Initialize a Label to display the User Input
-    label = Label(win, text="Please enter your website", font=("Arial 12"))
-    label2 = Label(win, text="", font=("Courier 12"))
-
-
-    #Create an Entry widget to accept User Input
-    entry = Entry(win, width= 42, bg="#FFFFFF", fg="#000000")
-    entry.focus_set()
-
-
-    #Create a Button to validate Entry Widget
-    button1 = ttk.Button(win, text= "Search",width= 40, command=lambda: [display_text(entry, label, win, label2)])
-    button2 = ttk.Button(win, text="Exit", width=40, command=lambda: [close_window(win)])
-
-
-
-    # This will allow you to manage the order of the widgets
-    label.pack()
-    entry.pack()
-    button1.pack(pady=5)
-    button2.pack(pady=5)
-    label2.pack()
-    win.mainloop()
 
 def display_text(entry, label, win, label2):
     # here we will validate user input, if valid window will close. else it will require the user to try again
@@ -67,6 +25,8 @@ def display_text(entry, label, win, label2):
                 label.configure(text=captured_string)
                 label2.configure(text=captured_string, fg="#228B22")
                 break
+
+
         #we need to reset the position to 0 so the rest of the code can use the same variable.
         position = 0
         #here we need to iterate over each position within the list using the position as the indicator.
@@ -76,6 +36,8 @@ def display_text(entry, label, win, label2):
             position = position + 1
             if valid_response_end_response == True:
                 break
+
+
         #If all of the conditions are true then we will craft a valid string and submit it.
         if valid_response_start_response == True and  valid_response_end_response == True:
             #assigning all conditions to be true to process this condition.
@@ -114,6 +76,3 @@ def website_query(response, label2, crafter_website_checks):
         if website_check != 200:
             break
         position = position + 1
-
-
-open_window()
