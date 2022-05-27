@@ -4,28 +4,45 @@ from tkinter import ttk
 import urllib.request
 
 
+# This section is for managing the tkinter window.
 def open_window():
     #Create an instance of Tkinter frame
     win = Tk()
 
     #Set the geometry of Tkinter frame
-    win.geometry("300x300")
-    user_input = ''
+    win.geometry("300x250")
+    win.maxsize(width="300", height="250")
+    win.eval('tk::PlaceWindow . center')
+    big_frame = ttk.Frame(win)
+    big_frame.pack(fill="both", expand=False)
+
+    # This will initiate the theme of the tkinter window.
+    # The theme being used is azure downloaded from (https://github.com/rdbende/Azure-ttk-theme)
+    win.tk.call("source", "Azure-ttk-theme-main/azure.tcl")
+    win.tk.call("set_theme", "dark")
+
     #Initialize a Label to display the User Input
     label = Label(win, text="Please enter your website", font=("Arial 12"))
-    label.pack()
+    label2 = Label(win, text="", font=("Courier 12"))
+
 
     #Create an Entry widget to accept User Input
-    entry = Entry(win, width= 40)
+    entry = Entry(win, width= 42, bg="#FFFFFF", fg="#000000")
     entry.focus_set()
-    entry.pack()
+
+
     #Create a Button to validate Entry Widget
-    ttk.Button(win, text= "Search",width= 40, command=lambda: [display_text(entry, label, win, label2)]).pack(pady=5)
-    ttk.Button(win, text="Exit", width=40, command=lambda: [close_window(win)]).pack(pady=5)
+    button1 = ttk.Button(win, text= "Search",width= 40, command=lambda: [display_text(entry, label, win, label2)])
+    button2 = ttk.Button(win, text="Exit", width=40, command=lambda: [close_window(win)])
 
-    label2 = Label(win, text="", font=("Courier 12"))
+
+
+    # This will allow you to manage the order of the widgets
+    label.pack()
+    entry.pack()
+    button1.pack(pady=5)
+    button2.pack(pady=5)
     label2.pack()
-
     win.mainloop()
 
 def display_text(entry, label, win, label2):
@@ -36,11 +53,10 @@ def display_text(entry, label, win, label2):
     accepted_url_starts = ["www.", "http://", "https://"]
     accepted_url_ends_with = [".com", ".net",".au", ".eu",".co",".org", ".io",]
     if captured_string == '':
-        print("sorry input was empty")
         if captured_string == '':
             captured_string = "Information cannot be empty"
             label.configure(text=captured_string)
-
+    #If the user input is not empty, then we will process the information.
     if captured_string != '':
         position = 0
         for i in accepted_url_starts:
@@ -48,23 +64,23 @@ def display_text(entry, label, win, label2):
             valid_response_start_response = captured_string.startswith(validate_accepted_url_position)
             position = position + 1
             if valid_response_start_response == True:
-                print("we found a Valid start")
                 label.configure(text=captured_string)
-                label2.configure(text=captured_string)
+                label2.configure(text=captured_string, fg="#228B22")
                 break
+        #we need to reset the position to 0 so the rest of the code can use the same variable.
         position = 0
+        #here we need to iterate over each position within the list using the position as the indicator.
         for i in accepted_url_ends_with:
             validate_accepted_url_end_position = accepted_url_ends_with[position]
             valid_response_end_response = captured_string.endswith(validate_accepted_url_end_position)
             position = position + 1
             if valid_response_end_response == True:
-                print("we found a valid end")
-                position = 0
                 break
+        #If all of the conditions are true then we will craft a valid string and submit it.
         if valid_response_start_response == True and  valid_response_end_response == True:
+            #assigning all conditions to be true to process this condition.
             all_conditions_have_been_met = True
-
-            if all_conditions_have_been_met == True:
+            if all_conditions_have_been_met:
                 crafter_website_checks = [captured_string]
                 captured_string_start = captured_string.startswith("www.")
                 if captured_string_start == True:
@@ -77,30 +93,25 @@ def display_text(entry, label, win, label2):
                             break
             website_query(captured_string, label2, crafter_website_checks)
         else:
-            label2.configure(text="sorry, all conditions \nneed to be met\nmake sure your website\n query starts with www. \n and ends with .com")
-
+            label2.configure(text="sorry, all conditions \nneed to be met.\nmake sure your website\n query starts with www. \n and ends a valid\n extention", fg="#FF8C00")
 
 def close_window(win):
-
     win.destroy()
-
-
 def website_query(response, label2, crafter_website_checks):
     position = 0
 
     for i in crafter_website_checks:
-        website_check = urllib.request.urlopen(crafter_website_checks[position]).getcode()
-        print(website_check)
-
+        try:
+             website_check = urllib.request.urlopen(crafter_website_checks[position]).getcode()
+        except:
+            label2.configure(text="This site does not exist,\n or it is not live", fg="#FF8C00")
+            continue
         if website_check == 200:
             response = crafter_website_checks[position]
-            print(response)
-            print("the value for this is " + response)
             valid_response_label_response = response + "\nIs live"
-            label2.configure(text=valid_response_label_response)
+            label2.configure(text=valid_response_label_response, fg="#228B22")
             break
         if website_check != 200:
-            print("This site is not live or does not exist")
             break
         position = position + 1
 
