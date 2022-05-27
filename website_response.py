@@ -1,6 +1,7 @@
 #Import the required Libraries
 # from open_window import open_window
 import urllib.request
+import website_crawl
 
 
 def display_text(entry, label, win, label2):
@@ -70,9 +71,11 @@ def website_query(response, label2, crafter_website_checks):
             continue
         if website_check == 200:
             response = crafter_website_checks[position]
+            pass_string = website_crawl.check_external_links(response)
             valid_response_label_response = response + "\nIs live"
             label2.configure(text=valid_response_label_response, fg="#228B22")
-            break
+            return response
+
         if website_check != 200:
             break
         position = position + 1
