@@ -26,7 +26,7 @@ class OpenWindow:
         close_button_external_links = Button(options_bar, width="17", text='External Links', bd=0.5, command=lambda: [(website_crawl.show_external_links(self.win, entry, button1, button2, label, label2))])
         close_button_bulk_scan = Button(options_bar, width="17", text='Bulk Scan', bd=0.5, command=bulk_scan.scan_from_file)
         close_button_store_output = Button(options_bar, width="17", text='Store Output', bd=0.5, command=store_scans.StoredScans)
-        close_button_button_undefined = Button(options_bar, width="17", text='undefined', bd=0.5, command=store_scans.StoredScans)
+        close_button_button_undefined = Button(options_bar, width="17", text='Contact Info', bd=0.5, command=store_scans.StoredScans)
         close_button_external_links.pack(side=RIGHT)
         close_button_bulk_scan.pack(side=LEFT)
         close_button_store_output.pack(side=LEFT)
