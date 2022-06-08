@@ -1,5 +1,4 @@
 #Import the required Libraries
-# from open_window import open_window
 import urllib.request
 import website_crawl
 
