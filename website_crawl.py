@@ -60,6 +60,11 @@ def valid_links(win, list, text):
     contacts_list = []
     position = 0
     print(list)
+    valid_links_file_name = 'stored_data.txt'
+    contact_info_scraped = 'contact_data.txt'
+    file = open(valid_links_file_name, 'w')
+    file_contact = open(contact_info_scraped, 'w')
+
     for i in list:
         if list[position].startswith("http"):
             keep_links_list.append(list[position])
@@ -86,9 +91,19 @@ def valid_links(win, list, text):
             contacts_list.append(not_valid_links[position])
 
         position = position + 1
+    position = 0
 
     print(not_valid_links)
     print(contacts_list)
+    for i in live_list:
+        file.write(live_list[position])
+        position = position + 1
+    position = 0
+    for i in contacts_list:
+        file_contact.write(contacts_list[position] + "\n")
+        position = position + 1
+    file.close()
+    file_contact.close()
     text.configure(font=("Times New Roman", 12), fg="#228B22", height=13)
     text.pack()
     scan_live_sites = ttk.Button(win, width=67, text='Scan Live Sites', command=lambda: [()])
