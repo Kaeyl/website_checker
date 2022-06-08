@@ -1,11 +1,7 @@
-import urllib.request
 from tkinter import *
 from tkinter import ttk
 import requests
 from bs4 import BeautifulSoup
-
-from website_scanner import website_response
-
 
 def show_external_links(win, entry, button1, button2, label, label2):
     global list
@@ -57,34 +53,44 @@ def handle_external_links(links):
 
 def valid_links(win, list, text):
     global keep_list
+    regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
     text.delete("1.0","end")
     live_list = []
-    keep_list = []
+    keep_links_list = []
     not_valid_links = []
+    contacts_list = []
     position = 0
     print(list)
     for i in list:
         if list[position].startswith("http"):
-            keep_list.append(list[position])
-        else:
+            keep_links_list.append(list[position])
+        if not list[position].startswith("http"):
             not_valid_links.append(list[position])
         position = position + 1
     position = 0
 
     # Take the list from show_external_links and scans them for 200 code. If there is a 200 code then it will show up in green
-    for i in keep_list:
+    for i in keep_links_list:
         try:
-            web_requests = requests.get(keep_list[position])
+            web_requests = requests.get(keep_links_list[position])
             if web_requests.status_code >= 200:
-                live_list.append(keep_list[position] + "\n")
+                live_list.append(keep_links_list[position] + "\n")
                 text.insert(INSERT, live_list[position])
-                # print(web_requests)
         except:
             pass
         position = position + 1
+    position = 0
+    for i in not_valid_links:
+        if not_valid_links[position].startswith("tel"):
+            contacts_list.append(not_valid_links[position])
+        if not_valid_links[position].startswith("mailto:"):
+            contacts_list.append(not_valid_links[position])
+
+        position = position + 1
+
     print(not_valid_links)
+    print(contacts_list)
     text.configure(font=("Times New Roman", 12), fg="#228B22", height=13)
     text.pack()
     scan_live_sites = ttk.Button(win, width=67, text='Scan Live Sites', command=lambda: [()])
     scan_live_sites.pack(expand=True, fill=Y)
-    
