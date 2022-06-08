@@ -53,7 +53,6 @@ def handle_external_links(links):
 
 def valid_links(win, list, text):
     global keep_list
-    regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
     text.delete("1.0","end")
     live_list = []
     keep_links_list = []
